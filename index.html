@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía Interactiva: Dinámica y Táctica del Balonmano</title>
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link id="manifest-link" rel="manifest">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --border-card: rgba(148, 163, 184, 0.1);
+            --accent-cyan: #06b6d4;
+            --accent-amber: #f59e0b;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --font-head: 'Rajdhani', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --glass-blur: blur(16px);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--accent-cyan);
+            color: var(--bg-main);
+            padding: 8px;
+            z-index: 100;
+            transition: top 0.2s;
+        }
+        .skip-link:focus { top: 0; }
+
+        h1, h2, h3, h4, h5, h6 { font-family: var(--font-head); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+            padding: 24px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            height: 100%;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(6, 182, 212, 0.15);
+            border-color: var(--accent-cyan);
+        }
+
+        .accent-line {
+            width: 40px;
+            height: 4px;
+            background: var(--accent-cyan);
+            margin-bottom: 16px;
+            border-radius: 2px;
+        }
+
+        /* Hero */
+        .hero-section {
+            padding: 100px 0 60px;
+            position: relative;
+            border-bottom: 1px solid var(--border-card);
+        }
+        .hero-title { font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1.1; margin-bottom: 20px; }
+        .hero-subtitle { font-size: 1.2rem; color: var(--text-muted); max-width: 600px; }
+        .metric-badge {
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: var(--font-head);
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        /* Hub Grid */
+        .hub-grid { padding: 60px 0; }
+        .card-title { color: var(--accent-cyan); font-size: 1.5rem; margin-bottom: 15px; }
+        
+        /* Cancha SVG */
+        .court-svg { width: 100%; height: auto; border-radius: 8px; }
+        .court-zone { fill: rgba(6, 182, 212, 0.1); stroke: var(--accent-cyan); stroke-width: 2; }
+        .court-line { stroke: var(--text-muted); stroke-width: 1.5; stroke-dasharray: 5,5; }
+        .court-goal { stroke: var(--accent-amber); stroke-width: 2.5; fill: none; }
+        .court-text { fill: var(--text-main); font-family: var(--font-head); font-size: 12px; text-anchor: middle; }
+
+        /* Modals */
+        .modal-content {
+            background: #1e293b;
+            color: var(--text-main);
+            border: 1px solid var(--border-card);
+            border-radius: 12px;
+        }
+        .modal-header { border-bottom: 1px solid var(--border-card); }
+        .modal-footer { border-top: 1px solid var(--border-card); }
+        .btn-close { filter: invert(1); }
+        .btn-accent {
+            background: var(--accent-cyan);
+            color: var(--bg-main);
+            font-family: var(--font-head);
+            font-weight: 700;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .btn-accent:hover {
+            background: #22d3ee;
+            color: var(--bg-main);
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
+        }
+
+        /* Tacticas & Lanzamientos List */
+        .tactic-item, .launch-item {
+            background: rgba(15, 23, 42, 0.6);
+            border-left: 3px solid var(--accent-amber);
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 0 6px 6px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .tactic-item:hover, .launch-item:hover {
+            background: rgba(6, 182, 212, 0.1);
+            border-left-color: var(--accent-cyan);
+            transform: translateX(5px);
+        }
+        .item-title { font-family: var(--font-head); font-size: 1.2rem; color: var(--text-main); margin: 0; }
+        .item-desc { font-size: 0.9rem; color: var(--text-muted); margin: 0; }
+
+        /* Quiz */
+        .quiz-option {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--border-card);
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: var(--font-body);
+            color: var(--text-main);
+            width: 100%;
+            text-align: left;
+        }
+        .quiz-option:hover:not(:disabled) {
+            border-color: var(--accent-cyan);
+            background: rgba(6, 182, 212, 0.1);
+        }
+        .quiz-option.correct { background: rgba(16, 185, 129, 0.2); border-color: var(--accent-green); color: var(--accent-green); }
+        .quiz-option.wrong { background: rgba(239, 68, 68, 0.2); border-color: var(--accent-red); color: var(--accent-red); }
+        .quiz-option:disabled { cursor: not-allowed; }
+
+        /* Footer */
+        .footer-section {
+            background: rgba(15, 23, 42, 0.9);
+            border-top: 1px solid var(--border-card);
+            padding: 30px 0;
+            margin-top: 60px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Accordion */
+        .accordion-item { background: transparent; border: none; margin-bottom: 8px; }
+        .accordion-button {
+            background: rgba(15, 23, 42, 0.6);
+            color: var(--text-main);
+            font-family: var(--font-head);
+            font-size: 1.2rem;
+            border-radius: 6px !important;
+            border: 1px solid var(--border-card);
+        }
+        .accordion-button:not(.collapsed) {
+            background: rgba(6, 182, 212, 0.1);
+            color: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            box-shadow: none;
+        }
+        .accordion-button::after { filter: invert(1); }
+        .accordion-body { color: var(--text-muted); padding: 15px; background: rgba(30, 41, 59, 0.5); border-radius: 0 0 6px 6px; margin-top: -4px; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .glass-card, .tactic-item, .launch-item, .quiz-option, .btn-accent {
+                transition: none !important;
+                animation: none !important;
+            }
+            html { scroll-behavior: auto; }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; }
+            .hero-section { padding: 60px 0 40px; }
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Saltar al contenido</a>
+
+    <header class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="hero-title">Dinámica y Táctica <br><span style="color: var(--accent-cyan);">del Balonmano</span></h1>
+                    <p class="hero-subtitle">Análisis visual, estratégico y técnico del deporte. Diseñado para la comprensión profunda y la aplicación táctica real.</p>
+                    <div class="mt-4">
+                        <span class="metric-badge"><i class="fas fa-ruler-combined me-2"></i>40m × 20m</span>
+                        <span class="metric-badge"><i class="fas fa-users me-2"></i>7 Jugadores</span>
+                        <span class="metric-badge"><i class="fas fa-clock me-2"></i>2 × 30 Min</span>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                    <button class="btn-accent" onclick="document.getElementById('hub').scrollIntoView({behavior: 'smooth'})">
+                        Explorar Módulos <i class="fas fa-arrow-down ms-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content" class="hub-grid">
+        <div class="container">
+            <div class="row g-4" id="hub">
+                
+                <!-- Reglas Básicas -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="glass-card">
+                        <div class="accent-line"></div>
+                        <h3 class="card-title">Reglas Básicas</h3>
+                        <ul class="list-unstyled" style="color: var(--text-muted);">
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Objetivo: Marcar más goles que el rival.</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Máximo 3 pasos con el balón.</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Control con yemas de los dedos.</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Duración: 2 tiempos de 30 min.</li>
+                            <li><i class="fas fa-check-circle text-success me-2"></i>Solo el portero usa los pies en el área.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Cancha Táctica (Large Card) -->
+                <div class="col-md-6 col-lg-8">
+                    <div class="glass-card">
+                        <div class="accent-line"></div>
+                        <h3 class="card-title">Espacio de Juego</h3>
+                        <svg class="court-svg mt-3" viewBox="0 0 400 200" aria-label="Diagrama de la cancha de balonmano mostrando dimensiones y zonas clave">
+                            <!-- Cancha -->
+                            <rect x="0" y="0" width="400" height="200" fill="#0f172a" stroke="#334155" stroke-width="2"/>
+                            <text x="200" y="100" class="court-text" style="font-size:30px; opacity:0.1;">40m x 20m</text>
+                            
+                            <!-- Línea central -->
+                            <line x1="200" y1="0" x2="200" y2="200" stroke="#334155" stroke-width="2"/>
+                            
+                            <!-- Área de 6m Izquierda -->
+                            <rect x="0" y="60" width="40" height="80" class="court-zone" fill="none"/>
+                            <path d="M 40 60 A 40 40 0 0 0 40 140" class="court-zone" fill="none"/>
+                            <text x="20" y="105" class="court-text" style="font-size:14px;">6m</text>
+                            
+                            <!-- Línea de 9m Izquierda -->
+                            <path d="M 0 50 A 55 55 0 0 0 0 150" class="court-line"/>
+                            <text x="52" y="105" class="court-text" style="fill: var(--text-muted); font-size:10px;">9m</text>
+
+                            <!-- Línea de 7m Izquierda -->
+                            <line x1="28" y1="0" x2="28" y2="200" stroke="var(--accent-amber)" stroke-width="1" stroke-dasharray="3,3"/>
+                            <circle cx="28" cy="100" r="2" fill="var(--accent-amber)"/>
+                            <text x="28" y="190" class="court-text" style="fill: var(--accent-amber); font-size:10px;">7m</text>
+
+                            <!-- Área de 6m Derecha -->
+                            <rect x="360" y="60" width="40" height="80" class="court-zone" fill="none"/>
+                            <path d="M 360 60 A 40 40 0 0 1 360 140" class="court-zone" fill="none"/>
+                            <text x="380" y="105" class="court-text" style="font-size:14px;">6m</text>
+
+                            <!-- Línea de 9m Derecha -->
+                            <path d="M 400 50 A 55 55 0 0 1 400 150" class="court-line"/>
+                            <text x="348" y="105" class="court-text" style="fill: var(--text-muted); font-size:10px;">9m</text>
+
+                            <!-- Línea de 7m Derecha -->
+                            <line x1="372" y1="0" x2="372" y2="200" stroke="var(--accent-amber)" stroke-width="1" stroke-dasharray="3,3"/>
+                            <circle cx="372" cy="100" r="2" fill="var(--accent-amber)"/>
+                            <text x="372" y="190" class="court-text" style="fill: var(--accent-amber); font-size:10px;">7m</text>
+                        </svg>
+                        <p class="mt-3" style="font-size:0.9rem; color:var(--text-muted);">Zona de 6m: Solo acceso del portero. Línea de 9m: Inicio de acciones ofensivas sin contacto. 7m: Lanzamiento de penalti.</p>
+                    </div>
+                </div>
+
+                <!-- Técnicas de Lanzamiento -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="glass-card">
+                        <div class="accent-line" style="background: var(--accent-amber);"></div>
+                        <h3 class="card-title" style="color: var(--accent-amber);">Técnicas de Lanzamiento</h3>
+                        <div id="launch-container"></div>
+                    </div>
+                </div>
+
+                <!-- Posiciones (Accordion) -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="glass-card">
+                        <div class="accent-line"></div>
+                        <h3 class="card-title">Posiciones y Roles</h3>
+                        <div class="accordion" id="accPositions"></div>
+                    </div>
+                </div>
+
+                <!-- Portero -->
+                <div class="col-md-12 col-lg-4">
+                    <div class="glass-card" style="border-left: 4px solid var(--accent-cyan);">
+                        <div class="accent-line"></div>
+                        <h3 class="card-title"><i class="fas fa-shield-halved me-2"></i>El Portero</h3>
+                        <p style="color: var(--text-muted);">Pilar de la seguridad defensiva y creador del contraataque. Su visión del juego es crítica para la transición.</p>
+                        <ul class="list-unstyled" style="color: var(--text-main);">
+                            <li class="mb-2"><i class="fas fa-bolt text-warning me-2"></i><strong>Reflejos:</strong> Reacción bajo presión en lanzamientos de 7m.</li>
+                            <li class="mb-2"><i class="fas fa-eye text-info me-2"></i><strong>Visión:</strong> Lectura del juego ofensivo rival.</li>
+                            <li class="mb-2"><i class="fas fa-fist-raised text-danger me-2"></i><strong>Seguridad:</strong> Intimidación y bloqueo de ángulos.</li>
+                            <li><i class="fas fa-running text-success me-2"></i><strong>Inicio:</strong> Precisión en el pase largo para el contraataque.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Dinámica Táctica -->
+                <div class="col-lg-6">
+                    <div class="glass-card">
+                        <div class="accent-line" style="background: var(--accent-green);"></div>
+                        <h3 class="card-title" style="color: var(--accent-green);">Dinámica Táctica</h3>
+                        <div id="tactics-container"></div>
+                    </div>
+                </div>
+
+                <!-- Autoevaluación -->
+                <div class="col-lg-6">
+                    <div class="glass-card">
+                        <div class="accent-line" style="background: var(--accent-red);"></div>
+                        <h3 class="card-title" style="color: var(--accent-red);">Autoevaluación</h3>
+                        <div id="quiz-container">
+                            <h5 id="quiz-question" class="mb-3" style="font-family: var(--font-body); font-weight: 600;"></h5>
+                            <div id="quiz-options" class="d-grid gap-2"></div>
+                            <div id="quiz-feedback" class="mt-3 fw-bold" aria-live="polite"></div>
+                            <button id="quiz-next" class="btn-accent mt-3 w-100 d-none">Siguiente Pregunta <i class="fas fa-arrow-right ms-2"></i></button>
+                            <button id="quiz-restart" class="btn-accent mt-3 w-100 d-none" style="background: var(--accent-green);">Reiniciar Evaluación <i class="fas fa-redo ms-2"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer-section">
+        <div class="container text-center">
+            <p class="mb-1">Creado por: <strong>Andrea Micaela De los Rios Quintana</strong></p>
+            <p class="mb-0">Universidad Tecnológica del Perú | Año de elaboración: 2026 | Infografía</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // --- DATOS SIMULADOS (JSON) ---
+        const appData = {
+            positions: [
+                { id: "por", title: "Portero", func: "Proteger la portería y dirigir la defensa.", attrs: "Reflejos, agresividad, visión.", rol: "Último defensor y primer atacante." },
+                { id: "ei", title: "Extremo Izquierdo", func: "Romper por el lateral y buscar ángulo de tiro.", attrs: "Velocidad, acrobacia, salto.", rol: "Desequilibrante en espacios reducidos." },
+                { id: "ed", title: "Extremo Derecho", func: "Romper por el lateral y buscar ángulo de tiro.", attrs: "Velocidad, acrobacia, salto.", rol: "Desequilibrante en espacios reducidos." },
+                { id: "li", title: "Lateral Izquierdo", func: "Creación de juego desde el lado débil.", attrs: "Potencia de tiro, visión de pase.", rol: "Distribución y lanzamiento lejano." },
+                { id: "ld", title: "Lateral Derecho", func: "Creación de juego desde el lado fuerte.", attrs: "Potencia de tiro, visión de pase.", rol: "Distribución y lanzamiento lejano." },
+                { id: "cen", title: "Central", func: "Cerebro del equipo, conexión entre líneas.", attrs: "Inteligencia, manejo de balón, visión.", rol: "Organizar el ataque estático y rápido." },
+                { id: "piv", title: "Pivote", func: "Infiltrarse en la defensa rival.", attrs: "Fuerza, bloqueo, salida rápida.", rol: "Fijar defensas y recibir en situaciones de gol." }
+            ],
+            tactics: [
+                { title: "Cruce", desc: "Dos jugadores de primera línea intercambian posiciones para desorientar y ganar ventaja espacial." },
+                { title: "Bloqueo del Pivote", desc: "El pivote obstruye la visión o movimiento del defensor para liberar la línea de tiro del lateral o extremo." },
+                { title: "Transición Ofensiva", desc: "Paso rápido de defensa a ataque tras recuperar el balón, antes de que el rival se reorganice." },
+                { title: "Circulación Rápida", desc: "Movimiento ágil del balón de lado a lado para desplazar a la defensa y buscar el hueco." },
+                { title: "Fijación Defensiva", desc: "Atraer a uno o varios defensores hacia un lado del ataque para generar superioridad en el lado contrario." }
+            ],
+            launches: [
+                { title: "Suspensión", desc: "Salto para sobrepasar la defensa en altura. Tiro en la caída. Ventaja: ángulo de tiro elevado." },
+                { title: "Apoyo", desc: "Un pie en el suelo. Permite amagar y rectificar. Ventaja: versatilidad y encaro directo." },
+                { title: "Cadera", desc: "Ocultando el balón, tiro sorpresa desde abajo. Ventaja: engaño al portero." }
+            ],
+            questions: [
+                { q: "¿Cuál es la medida oficial de la cancha de balonmano?", opts: ["40m × 20m", "50m × 25m", "30m × 15m", "28m × 15m"], correct: 0 },
+                { q: "¿Qué zona es exclusiva para el portero?", opts: ["Área de 9 metros", "Línea de 7 metros", "Área de 6 metros", "Círculo central"], correct: 2 },
+                { q: "¿Cuántos pasos puede dar un jugador de campo con el balón?", opts: ["Ilimitados si bota", "Máximo 3", "Máximo 2", "Máximo 5"], correct: 1 },
+                { q: "¿Qué técnica de lanzamiento se caracteriza por el salto para sobrepasar la defensa?", opts: ["Lanzamiento en apoyo", "Lanzamiento en cadera", "Lanzamiento en suspensión", "Lanzamiento de puntera"], correct: 2 }
+            ]
+        };
+
+        // --- POBLAR UI ---
+        
+        // Posiciones (Accordion)
+        const accContainer = document.getElementById("accPositions");
+        appData.positions.forEach((pos, index) => {
+            accContainer.innerHTML += `
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="head${pos.id}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#col${pos.id}" aria-expanded="false" aria-controls="col${pos.id}">
+                            ${pos.title}
+                        </button>
+                    </h2>
+                    <div id="col${pos.id}" class="accordion-collapse collapse" aria-labelledby="head${pos.id}" data-bs-parent="#accPositions">
+                        <div class="accordion-body">
+                            <strong>Función:</strong> ${pos.func}<br>
+                            <strong>Atributos:</strong> ${pos.attrs}<br>
+                            <strong>Rol:</strong> ${pos.rol}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        // Tácticas
+        const tacticsContainer = document.getElementById("tactics-container");
+        appData.tactics.forEach(tac => {
+            tacticsContainer.innerHTML += `
+                <div class="tactic-item">
+                    <h5 class="item-title">${tac.title}</h5>
+                    <p class="item-desc">${tac.desc}</p>
+                </div>
+            `;
+        });
+
+        // Lanzamientos
+        const launchContainer = document.getElementById("launch-container");
+        appData.launches.forEach(lau => {
+            launchContainer.innerHTML += `
+                <div class="launch-item">
+                    <h5 class="item-title">${lau.title}</h5>
+                    <p class="item-desc">${lau.desc}</p>
+                </div>
+            `;
+        });
+
+        // --- LÓGICA QUIZ ---
+        let currentQ = 0;
+        let score = 0;
+        let answering = true;
+
+        const qEl = document.getElementById("quiz-question");
+        const oEl = document.getElementById("quiz-options");
+        const fEl = document.getElementById("quiz-feedback");
+        const nextBtn = document.getElementById("quiz-next");
+        const restartBtn = document.getElementById("quiz-restart");
+
+        function loadQuestion() {
+            answering = true;
+            fEl.textContent = "";
+            nextBtn.classList.add("d-none");
+            
+            const qData = appData.questions[currentQ];
+            qEl.textContent = `${currentQ + 1}. ${qData.q}`;
+            oEl.innerHTML = "";
+
+            qData.opts.forEach((opt, i) => {
+                const btn = document.createElement("button");
+                btn.className = "quiz-option";
+                btn.textContent = opt;
+                btn.setAttribute("aria-label", `Opción ${i+1}: ${opt}`);
+                btn.onclick = () => checkAnswer(i, btn);
+                oEl.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(index, btn) {
+            if (!answering) return;
+            answering = false;
+
+            const qData = appData.questions[currentQ];
+            const buttons = oEl.querySelectorAll(".quiz-option");
+
+            buttons.forEach(b => b.disabled = true);
+
+            if (index === qData.correct) {
+                btn.classList.add("correct");
+                fEl.textContent = "Respuesta correcta.";
+                fEl.style.color = "var(--accent-green)";
+                score++;
+            } else {
+                btn.classList.add("wrong");
+                buttons[qData.correct].classList.add("correct");
+                fEl.textContent = "Incorrecto. Revisa la respuesta correcta arriba.";
+                fEl.style.color = "var(--accent-red)";
+            }
+
+            if (currentQ < appData.questions.length - 1) {
+                nextBtn.classList.remove("d-none");
+            } else {
+                fEl.textContent += ` Puntaje final: ${score}/${appData.questions.length}`;
+                restartBtn.classList.remove("d-none");
+            }
+        }
+
+        nextBtn.addEventListener("click", () => {
+            currentQ++;
+            loadQuestion();
+        });
+
+        restartBtn.addEventListener("click", () => {
+            currentQ = 0;
+            score = 0;
+            restartBtn.classList.add("d-none");
+            loadQuestion();
+        });
+
+        loadQuestion();
+
+        // --- PWA LÓGICA ---
+        const manifestData = {
+            name: "Dinámica y Táctica del Balonmano",
+            short_name: "BalonmanoTact",
+            start_url: ".",
+            display: "standalone",
+            background_color: "#0f172a",
+            theme_color: "#06b6d4",
+            description: "Infografía interactiva táctica sobre balonmano para adultos.",
+            icons: [{
+                src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤾</text></svg>",
+                sizes: "512x512",
+                type: "image/svg+xml"
+            }]
+        };
+        const mBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/json'});
+        document.getElementById('manifest-link').setAttribute('href', URL.createObjectURL(mBlob));
+
+        const swCode = `
+            self.addEventListener('install', e => self.skipWaiting());
+            self.addEventListener('activate', e => e.waitUntil(clients.claim()));
+            self.addEventListener('fetch', e => {
+                e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).then(res => {
+                    return caches.open('handball-tact-v1').then(cache => { cache.put(e.request, res.clone()); return res; });
+                })));
+            });
+        `;
+        const swBlob = new Blob([swCode], {type: 'application/javascript'});
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(err => console.error('SW Error', err));
+        }
+    </script>
+</body>
+</html>
